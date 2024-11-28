@@ -1,0 +1,108 @@
+-- cleaning file 
+select * from menu_items where menu_item_id is null
+or item_name is null or category is null or price is null;
+select * from order_details where order_details_id is null or 
+order_id is null or order_date is null or order_time is null or item_id is null
+
+-- 1 view menu item table 
+select * from menu_items;
+-- 2  find the number of items in the menu 
+select count(*) from menu_items;
+-- what are the least and most expensive item on the menu 
+select * from menu_items;
+select * from menu_items
+order by price; -- last expensive item 
+select * from menu_items
+order by price desc; -- most expensive 
+-- 3  how many italian dishes are on the menu 
+select * from menu_items;
+select count(*)from menu_items where category = 'italian';
+--  4 what are the least and most expensive italian dishes on the menu 
+select * 
+from menu_items 
+where category = 'Italian'
+order by price limit 1;
+
+select * 
+from menu_items 
+where category = 'Italian'
+order by price desc limit 1;
+
+--  5 how many dishes are in each category 
+select * from menu_items;
+select category, count(menu_item_id) as Number_Of_dishes
+from menu_items
+group by category;
+
+--  6 what is average dish price in each category 
+select category, avg(price) as Avg_price
+from menu_items
+group by category;
+
+--7  view order table
+select * from order_details;
+-- 8 what is the date range in the order table
+select * from order_details
+order by order_date;
+select min(order_date) , max(order_date) from order_details;
+-- 9  how many order where made in this date range 
+select * from order_details;
+select count(distinct order_id) from order_details;
+-- 10  how many items are ordered in this date range 
+select count(*) from order_details;
+-- 11 which order had the most number of items ?
+select * from order_details;
+select  order_id, count(item_id) as Num_of_item
+from order_details
+group by order_id
+order by Num_of_item desc limit 1;
+-- 12  how many orders had more than 12 items
+select  order_id, count(item_id) as Num_of_item
+from order_details
+group by order_id
+having Num_of_item > 12;
+--  13 combne two tables 
+select * from order_details;
+select * from menu_items;
+select * from order_details , menu_items;
+
+select * from order_details as od left join menu_items as mi
+on od.item_id = mi.menu_item_id;
+
+--  14 whet are the least and most ordered item ? what categories  where they in 
+
+select item_name , count(order_details_id) as num_purchases
+ from order_details as od left join menu_items as mi
+on od.item_id = mi.menu_item_id
+group by item_name 
+order by num_purchases;-- least 
+
+select item_name , count(order_details_id) as num_purchases
+ from order_details as od left join menu_items as mi
+on od.item_id = mi.menu_item_id
+group by item_name 
+order by num_purchases desc; -- most 
+
+-- 15  what are the top 5 most oders that spends the most amount ?
+
+select order_id , sum(price) as Total_spend 
+from order_details as od left join menu_items as mi
+on od.item_id = mi.menu_item_id
+group by order_id
+order by Total_spend desc limit 5;
+-- 16  view th details of the highest spent order. what insights you can gathr from this 
+select category, count(item_id) as num_id
+ from order_details as od left join menu_items as mi
+on od.item_id = mi.menu_item_id
+where order_id = 440
+group by category
+
+
+
+
+
+
+
+
+
+
